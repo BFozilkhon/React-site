@@ -1,25 +1,61 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { deletes, save } from "./Redux/CounterSlice";
 
-function App() {
+export const App = () => {
+  const data = useSelector((state) => state.todo.todo);
+  const dispatch = useDispatch();
+  const [name, setName] = useState("");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Fozilkhon <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input
+        onChange={(e) => setName(e.target.value)}
+        placeholder="name"
+        type="text"
+      />
+      <button
+        onClick={() =>
+          dispatch(
+            save({
+              name: name,
+            })
+          )
+        }
+      >
+        Save
+      </button>
+      <table border="1">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>action</th>
+        </tr>
+
+        {data.map((value) => {
+          return (
+            <tr key={value.id}>
+              <td>{value.id}</td>
+              <td>{value.name}</td>
+              <td>
+                <button
+                  onClick={() =>
+                    dispatch(
+                      deletes({
+                        id: value.id,
+                      })
+                    )
+                  }
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          );
+        })}
+      </table>
     </div>
   );
-}
+};
 
 export default App;
